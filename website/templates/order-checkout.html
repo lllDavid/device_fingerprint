@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+
+<div class="checkout-page">
+    <h1 class="checkout-title">Checkout</h1>
+
+    {% if cart.cart_items.all %}
+    <div class="cart-review">
+        <table class="checkout-table">
+            <thead>
+                <tr>
+                    <th>Items</th>
+                    <th>Delivery</th>
+                    <th>Tax</th>
+                    <th>Discount</th>
+                    <th>Order Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${{ cart.get_total_cart_price }}</td>
+                    <td>${{ shipping_cost }}</td>
+                    <td>${{ tax_amount }}</td>
+                    <td>${{ discount_amount }}</td>
+                    <td>
+                        {% with total_item_price=0 %}
+                            {% for item in cart.cart_items.all %}
+                                {% with total_item_price=total_item_price|add:item.get_total_items_price %}
+                                {% endwith %}
+                            {% endfor %}
+                            ${{ cart.get_total_cart_price|add:shipping_cost|add:tax_amount|add:discount_amount }}
+                        {% endwith %}
+                    </td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+
+    <div class="shipping-info">
+        <h2 class="shipping-title">Shipping Information</h2>
+        <form method="POST" class="checkout-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="shipping_address" class="form-label">Shipping Address</label>
+                <textarea id="shipping_address" name="shipping_address" required class="form-input"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="shipping_method" class="form-label">Shipping Method</label>
+                <select id="shipping_method" name="shipping_method" required class="form-input">
+                    <option value="Standard">Standard</option>
+                    <option value="Express">Express</option>
+                    <option value="Overnight">Overnight</option>
+                </select>
+            </div>
+
+            <h2 class="payment-title">Payment Information</h2>
+            <div class="form-group">
+                <label for="card_number" class="form-label">Card Number</label>
+                <input type="text" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" required
+                    class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="expiry_date" class="form-label">Expiry Date</label>
+                <input type="text" id="expiry_date" name="expiry_date" placeholder="MM/YY" required class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="cvv" class="form-label">CVV</label>
+                <input type="text" id="cvv" name="cvv" placeholder="123" required class="form-input">
+            </div>
+
+            <button type="submit" class="checkout-button">Submit</button>
+        </form>
+    </div>
+
+    {% else %}
+    <p class="empty-cart">Your cart is empty. Please add items to your cart.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

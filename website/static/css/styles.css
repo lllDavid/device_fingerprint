@@ -1,0 +1,33 @@
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.navbar {
+    margin: 2rem;
+}
+
+#search-bar {
+    height: 2rem;
+    width: 12rem;
+}
+
+h1 {
+    font-size: 3rem !important;
+    margin: 1rem;
+}
+
+footer {
+    text-align: center;
+    margin-top: auto;
+    opacity: 0.5;
+}
+
+/* Login/Logout Icon */
+.bi {
+    font-size: 1.5rem;
+    transition: opacity 0.3s ease;
+    color: black;
+}

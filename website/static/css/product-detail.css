@@ -1,0 +1,30 @@
+.product-detail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#quantity-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#quantity {
+    height: fit-content;
+    width: 8rem;
+    margin: 0.5rem;
+}
+
+#cart-button,
+#buy-button {
+    width: 8rem;
+    height: fit-content;
+
+}
+
+#cart-button {
+    margin: 0.5rem;
+}

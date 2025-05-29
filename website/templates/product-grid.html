@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/product-grid.css' %}">
+<h1>Products</h1>
+
+{% if search_query %}
+{% if products|length > 0 %}
+<p id="p-search">Search results:</p>
+{% else %}
+<p id="p-search">No results found for "{{ search_query }}"</p>
+{% endif %}
+{% endif %}
+
+
+
+<div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <a href="{% url 'product-detail' product.id %}">
+            <h2>{{ product.name }}</h2>
+            <!-- Image is a placeholder, normally use metadata attribute to store image URL -->
+            <img src="https://placehold.co/800x600/EEE/31343C" alt="{{ product.name }} image" />
+            <p>${{ product.price }}</p>
+        </a>
+
+        <form action="{% url 'add-to-cart' product.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="quantity" value="1">
+
+            <button type="submit" class="btn btn-secondary">Add to Cart</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
