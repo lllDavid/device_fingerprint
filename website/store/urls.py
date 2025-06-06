@@ -19,10 +19,8 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, include
 
 from user import views as user
-from .views import home_view
-from .views import about_view
-from .views import contact_view
 from cart.views import cart_view
+from .views import home_view, about_view, contact_view, create_fingerprint
 
 urlpatterns = [
     path('', home_view, name='home'),
@@ -39,5 +37,6 @@ urlpatterns = [
     path('reset-password/done/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('fingerprint/', create_fingerprint),
 ]
 

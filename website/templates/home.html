@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <h1>Welcome, {{ user.username }}!</h1>
-    {% else %}
-        <h1>Welcome to Store!</h1>
-    {% endif %}
+{% if user.is_authenticated %}
+<h1>Welcome, {{ user.username }}!</h1>
+{% else %}
+<h1>Welcome to Store!</h1>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/fingerprint.js' %}"></script>
 {% endblock %}
