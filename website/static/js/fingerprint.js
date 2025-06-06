@@ -84,11 +84,22 @@ async function collectFingerprint() {
     let webgl_renderer = null;
     let webgl_vendor = null;
     let webgl_extensions = [];
+    let webgl_debug_supported = false;
 
     if (gl) {
-        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-        webgl_renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
-        webgl_vendor = debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR);
+        const isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
+
+        const debugInfo = !isFirefox ? gl.getExtension('WEBGL_debug_renderer_info') : null;
+        webgl_debug_supported = !!debugInfo;
+
+        webgl_renderer = debugInfo
+            ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
+            : gl.getParameter(gl.RENDERER);
+
+        webgl_vendor = debugInfo
+            ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL)
+            : gl.getParameter(gl.VENDOR);
+
         webgl_extensions = gl.getSupportedExtensions() || [];
     }
 
@@ -313,7 +324,8 @@ async function collectFingerprint() {
                 supportedCDMs.push(keySystem);
             } catch { }
         }
-        return supportedCDMs.length ? supportedCDMs : null;
+        return supportedCDMs;
+
     }
 
     const cdm_list = await getAvailableCDMs();
