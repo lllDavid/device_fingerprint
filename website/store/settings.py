@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'order',
     'payment',
     'product',
-    'user'
+    'user',
+    'fingerprint'
 ]
 
 MIDDLEWARE = [

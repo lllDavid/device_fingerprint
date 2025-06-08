@@ -7,6 +7,7 @@
 - A ML model to determine whether two device fingerprints belong to the same user. (Not yet implemented)
 - Potential integration with Selenium to simulate diverse user traffic. (Not yet implemented)
 
+- TODO: Mechanism needs to be implemented to prevent duplicate fingerprints. Currently each visit on homepage generates a new fingerprint.
 
 ## Usage
 
@@ -24,17 +25,25 @@ cd device_fingerprint_analyzer
 pip install -r requirements.txt
 ```
 
-### Run the Django Application (Website)
+### Apply Migrations
 ```bash
 cd website
+python manage.py migrate
+```
+### Run the Django Application (Website)
+```bash
 python manage.py runserver
 ```
 ## Fingerprint
-On visiting the homepage (http://127.0.0.1:8000/) a fingerprint is generated and printed in the Browsers console.
+- On visiting the homepage (http://127.0.0.1:8000/) a fingerprint is generated and printed in the Browsers console. 
+- It is then saved in the database (both as complete fingerprint aswell as its sub components). 
+- To populate the Fingerprint Dataclass one can use create_fingerprint_instance in website/fingerprint/helpers.py. 
+- To retrieve the complete Fingerprint as dictionary use fetch_full_fingerprint in website/fingerprint/helpers.py.
+- Any Selenium or ML Model logic isnt yet implemented.
 
 ## Components
 Fingerprint Dataclass:
-- Located at data/fingerprint.py and website/fingerprint/fingerprint.py
+- Located at data/fingerprint.py
 
-Collect Fingerprint Script:
-- Located at scripts/collect_fingerprint.js and website/static/js/collect_fingerprint.js
+Fingerprint Script:
+- Located at scripts/fingerprint.js

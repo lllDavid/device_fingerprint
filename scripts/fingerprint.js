@@ -1,3 +1,5 @@
+// Script to collect the fingerprint in browser, used in website/static/js/fingerprint.js
+
 async function collectFingerprint() {
     async function sha256(str) {
         const buf = new TextEncoder().encode(str);
@@ -393,7 +395,6 @@ collectFingerprint().then(fp => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            // "X-CSRFToken": getCookie("csrftoken") # Not needed in Django (@csrf_exempt)
         },
         body: JSON.stringify(fp)
     })
@@ -411,20 +412,4 @@ collectFingerprint().then(fp => {
         })
         .catch(error => console.error("Error sending fingerprint:", error));
 
-    /*
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.startsWith(name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-    */
 });
