@@ -8,6 +8,7 @@ class HttpHeaderFingerprint(models.Model):
     tls_cipher_suite = models.CharField(max_length=100, null=True, blank=True)
     headers_present = JSONField(default=list, null=True, blank=True)
     unusual_headers = JSONField(default=list, null=True, blank=True)
+    referer = models.CharField(max_length=100, null=True, blank=True)
 
 class Behavioral(models.Model):
     typing_speed = models.FloatField(null=True, blank=True)
@@ -58,8 +59,8 @@ class Hardware(models.Model):
     device_architecture = models.CharField(max_length=50, null=True, blank=True)
 
 class Browser(models.Model):
-    vendor = models.CharField(max_length=100, null=True, blank=True)
-    product_sub = models.CharField(max_length=100, null=True, blank=True)
+    browser = models.CharField(max_length=100, null=True, blank=True)
+    engine = models.CharField(max_length=100, null=True, blank=True)
     build_id = models.CharField(max_length=100, null=True, blank=True)
     private_mode = models.BooleanField(null=True, blank=True)
 
@@ -87,6 +88,7 @@ class PerformanceTimings(models.Model):
     timings = JSONField(default=dict, null=True, blank=True)
     memory = JSONField(default=dict, null=True, blank=True)
     network_timing = JSONField(default=dict, null=True, blank=True)
+    framerate = models.FloatField(null=True, blank=True)
 
 class IP(models.Model):
     ip_address = models.GenericIPAddressField(null=True, blank=True)

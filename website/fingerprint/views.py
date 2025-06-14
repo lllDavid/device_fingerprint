@@ -6,7 +6,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 from fingerprint.helpers import create_fingerprint
 
-# TODO: Error handling
 @csrf_exempt
 def create_fingerprint_from_request(request):
     if request.method != "POST":

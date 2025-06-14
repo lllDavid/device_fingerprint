@@ -86,7 +86,7 @@ def build_fingerprint_components(data):
             "scroll_behavior", "url_changes", "time_of_visit_patterns"
         ]),
         "browser": create_fingerprint_model(models.Browser, data.get("browser", {}), [
-            "vendor", "product_sub", "build_id", "private_mode"
+            "browser", "engine", "build_id", "private_mode"
         ]),
         "canvas": create_fingerprint_model(models.Canvas, data.get("canvas", {}), [
             "canvas_hash", "webgl_hash"
@@ -108,7 +108,7 @@ def build_fingerprint_components(data):
         ]),
         "http_header": create_fingerprint_model(models.HttpHeaderFingerprint, data.get("http_header_fingerprint", {}), [
             "header_count", "http_version", "tls_protocol",
-            "tls_cipher_suite", "headers_present", "unusual_headers"
+            "tls_cipher_suite", "headers_present", "unusual_headers", "referer"
         ]),
         "media": create_fingerprint_model(models.Media, data.get("media", {}), [
             "audio_codecs", "video_codecs", "media_devices"
@@ -117,7 +117,7 @@ def build_fingerprint_components(data):
             "effective_type", "downlink", "rtt"
         ]),
         "performance": create_fingerprint_model(models.PerformanceTimings, data.get("performance", {}), [
-            "timings", "memory", "network_timing"
+            "timings", "memory", "network_timing", "framerate"
         ]),
         "permissions": create_fingerprint_model(models.PermissionsStatus, data.get("permissions", {}), [
             "geolocation", "notifications", "camera", "microphone", "midi"

@@ -1,23 +1,23 @@
 from dataclasses import dataclass, field
 
-
 @dataclass
 class HttpHeaderFingerprint:
     header_count: int | None                                    # Total number of HTTP headers sent // Server side
-    http_version: str | None                                    # HTTP version used  // *
-    tls_protocol: str | None                                    # TLS protocol version // *
-    tls_cipher_suite: str | None                                # TLS cipher suite // *
-    headers_present : list[str] = field(default_factory=list)   # Set of header names present in the request // *
-    unusual_headers: list[str] = field(default_factory=list)    # List of uncommon headers present  // *
+    http_version: str | None                                    # HTTP version used  // Server side
+    tls_protocol: str | None                                    # TLS protocol version // Server side
+    tls_cipher_suite: str | None                                # TLS cipher suite // Server side
+    headers_present : list[str] = field(default_factory=list)   # Set of header names present in the request // Server side
+    unusual_headers: list[str] = field(default_factory=list)    # List of uncommon headers present  // Server side
+    referer: str | None = None                                  # Value of the Referer header if present // document.referrer
 
 @dataclass
 class Behavioral:
-    typing_speed: float | None                                           # Average typing speed // Server side
-    mouse_entropy: float | None                                          # Mouse movement randomness measure // *
-    keystroke_dynamics:  dict[str, float] = field(default_factory=dict)  # Keystroke timing info // *
-    scroll_behavior: dict[str, float] = field(default_factory=dict)      # Scroll event metrics // *
-    url_changes: list[str] = field(default_factory=list)                 # URLs visited during session // *
-    time_of_visit_patterns: list[str] = field(default_factory=list)      # Behavioral time patterns // *
+    typing_speed: float | None                                           # Average typing speed // keydown & keyup events -> average speed
+    mouse_entropy: float | None                                          # Mouse movement randomness measure // mouse coordinates -> directions, distances, velocity
+    keystroke_dynamics:  dict[str, float] = field(default_factory=dict)  # Keystroke timing info // keydown and keyup -> timing between, latency between, error rate
+    scroll_behavior: dict[str, float] = field(default_factory=dict)      # Scroll event metrics // scroll & wheel events -> scroll speed, scroll distance
+    url_changes: list[str] = field(default_factory=list)                 # URLs visited during session // popstate event, window.location
+    time_of_visit_patterns: list[str] = field(default_factory=list)      # Behavioral time patterns // timestamps of user events, loads, clicks, scrolls
 
 @dataclass
 class Display:
@@ -67,10 +67,10 @@ class Hardware:
 
 @dataclass
 class Browser:
-    vendor: str                              # Browser vendor name // navigator.vendor
-    product_sub: str | None                  # Product sub-version identifier // navigator.productSub
+    browser: str                             # Browser name + version // inferred from user agent string
+    engine: str                              # Browser rendering engine // inferred from user agent string
     build_id: str | None                     # Browser build identifier // navigator.buildID
-    private_mode: bool | None                # Private/incognito mode status // TODO: Create custom script
+    private_mode: bool | None                # Private/incognito mode status // TODO: Custom script 
 
 @dataclass
 class NetworkConnection:
@@ -101,10 +101,11 @@ class PerformanceTimings:
     timings: dict[str, object] = field(default_factory=dict)         # Performance timing metrics // performance.getEntriesByType('navigation')
     memory: dict[str, float] = field(default_factory=dict)           # Memory usage stats // performance.memory
     network_timing: dict[str, float] = field(default_factory=dict)   # Network timing metrics // performance.getEntriesByType('resource'
+    framerate: float | None = None                                   # Frame rate (FPS) // measured via requestAnimationFrame or performance API
 
 @dataclass
 class IP:
-    ip_address: str | None                                         # User's public IP address // Server side
+    ip_address: str | None                                         # User's public IP address // Lookup via API
     details: dict[str, object] = field(default_factory=dict)       # Additional IP-related details // Lookup via API
 
 @dataclass
@@ -127,7 +128,7 @@ class Audio:
 
 @dataclass
 class Fonts:
-    installed_fonts: list[str] = field(default_factory=list)       # Installed system fonts // TODO: Create custom script
+    installed_fonts: list[str] = field(default_factory=list)       # Installed system fonts // TODO: Custom script
 
 @dataclass
 class Fingerprint:
@@ -151,10 +152,3 @@ class Fingerprint:
     storage: Storage
     time_zone: TimeZone
     touch_pointer: TouchPointer
-
-
-
-
-
-
-
