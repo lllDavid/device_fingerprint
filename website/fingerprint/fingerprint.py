@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 
+
 @dataclass
 class HttpHeaderFingerprint:
     header_count: int | None                                    # Total number of HTTP headers sent // Server side
@@ -26,6 +27,7 @@ class Display:
     color_depth: int                   # Screen color depth in bits // screen.colorDepth
     device_pixel_ratio: float          # Ratio of physical pixels to CSS pixels // window.devicePixelRatio
     color_gamut: str | None            # Color gamut supported // const gamut = ['rec2020', 'p3', 'srgb'].find(g => window.matchMedia(`(color-gamut: ${g})`).matches); console.log(gamut); 
+    framerate: float | None = None     # Frame rate (FPS) // measured via requestAnimationFrame or performance API
 
 @dataclass
 class Storage:
@@ -97,13 +99,6 @@ class TouchPointer:
     standalone: bool                      # Standalone display-mode // window.matchMedia('(display-mode: standalone)')
 
 @dataclass
-class PerformanceTimings:
-    timings: dict[str, object] = field(default_factory=dict)         # Performance timing metrics // performance.getEntriesByType('navigation')
-    memory: dict[str, float] = field(default_factory=dict)           # Memory usage stats // performance.memory
-    network_timing: dict[str, float] = field(default_factory=dict)   # Network timing metrics // performance.getEntriesByType('resource'
-    framerate: float | None = None                                   # Frame rate (FPS) // measured via requestAnimationFrame or performance API
-
-@dataclass
 class IP:
     ip_address: str | None                                         # User's public IP address // Lookup via API
     details: dict[str, object] = field(default_factory=dict)       # Additional IP-related details // Lookup via API
@@ -145,7 +140,6 @@ class Fingerprint:
     http_header_fingerprint: HttpHeaderFingerprint
     media: Media
     network: NetworkConnection
-    performance: PerformanceTimings
     permissions: PermissionsStatus
     plugins: Plugins
     encrypted_media_capabilities: EncryptedMediaCapabilities
