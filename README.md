@@ -3,16 +3,16 @@
 
 ## Features
 ### Implemented
-- Generate a unique device fingerprint
+- Generates a unique device fingerprint
 
-- Convert it to a Dataclass, Dictionary and a Flattened Dictionary
+- Supports conversion to a dataclass, standard dictionary, and flattened dictionary format
 
-- Example Django-based E-Commerce store to demonstrate integration and usage.
+- Includes a Django-based e-commerce example application to demonstrate integration and usage
 
 ### Planned
-- A ML model to determine whether two device fingerprints belong to the same user.
+- A ML model to determine whether two device fingerprints belong to the same user
 
-- Potential integration with Selenium to simulate diverse user traffic. 
+- Potential integration with Selenium to simulate diverse user traffic
 
 ## Installation
 
@@ -51,9 +51,9 @@ python manage.py migrate
 python manage.py runserver
 ```
 ## Fingerprint
-- On visiting the homepage (http://127.0.0.1:8000/) a device fingerprint is generated and logged to the browser console.
+- On visiting the homepage (http://127.0.0.1:8000/) a fingerprint is generated and logged to the browser console
 
-- For conversion options see website/fingerprint/helpers.py or website/fingerprint/views.py
+- Fingerprint data Conversion functions are located at website/fingerprint/helpers.py 
 
 ## Components
 Fingerprint Dataclass:

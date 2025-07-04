@@ -165,7 +165,7 @@ async function collectFingerprint() {
 
     // ---------- Data Collection ----------
 
-    // Empty values planed to be retrieved server side
+    // Empty values retrieved server side
     const http_header_fingerprint = {
         header_count: null,
         http_version: null,

@@ -21,6 +21,9 @@ def create_fingerprint_from_request(request):
     if request.method != "POST":
         return JsonResponse({"error": "Invalid method"}, status=405)
 
+    if request.content_type != "application/json":
+        return JsonResponse({"error": "Invalid content type"}, status=400)
+
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
