@@ -36,7 +36,7 @@ async function collectFingerprint() {
         if (linux) return "Linux";
         return "Unknown";
     }
-    /* Slows down whole script, little entropy since most users are on 60
+    /* Slows down the script and adds little entropy since most users are on 60 fps
     function trackFPS(durationMs = 2000) {
         return new Promise(resolve => {
             let frameCount = 0;
@@ -163,7 +163,7 @@ async function collectFingerprint() {
 
     // ---------- Data Collection ----------
 
-    // Empty values retrieved server side
+    // Empty values planed to be retrieved server side
     const http_header_fingerprint = {
         header_count: null,
         http_version: null,
@@ -190,7 +190,8 @@ async function collectFingerprint() {
         device_pixel_ratio: window.devicePixelRatio,
         color_gamut: ['rec2020', 'p3', 'srgb'].find(g =>
             window.matchMedia(`(color-gamut: ${g})`).matches
-        ) || null
+        ) || null,
+        // framerate: await trackFPS()
     };
 
     const storage_estimate = await (navigator.storage?.estimate?.() || Promise.resolve({ usage: 0, quota: 0 }));
@@ -339,15 +340,6 @@ async function collectFingerprint() {
         standalone: window.matchMedia('(display-mode: standalone)').matches
     };
 
-    const framerate = 0; // await trackFPS()
-    const timings = performance.getEntriesByType('navigation')[0]?.toJSON() || {};
-    const memory = performance.memory || {};
-    const network_timing = performance.getEntriesByType('resource').reduce((acc, e) => {
-        acc[e.name] = e.responseEnd - e.startTime;
-        return acc;
-    }, {});
-    const performanceTimings = { timings, memory, network_timing, framerate };
-
     // Mock API Data
     const ipData = await Promise.resolve({
         ip: "192.0.2.1",
@@ -432,7 +424,7 @@ async function collectFingerprint() {
     const fingerprint = {
         ip, audio, behavioral, browser, canvas, css_features, display,
         fonts, graphics, hardware, http_header_fingerprint, media, network,
-        performance: performanceTimings, permissions, plugins,
+        permissions, plugins,
         encrypted_media_capabilities, storage,
         time_zone: timeZone, touch_pointer
     };

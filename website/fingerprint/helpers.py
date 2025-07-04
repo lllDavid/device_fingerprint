@@ -9,7 +9,7 @@ from fingerprint.models import Fingerprint as fingerprint_model
 from fingerprint.fingerprint import Fingerprint as fingerprint_dataclass
 
 
-# Create and save a validated Django model instance. TODO: Better validation, errors
+# Create and save a validated Django model instance. TODO: Better validation
 def create_fingerprint_model(model_cls, data, fields=None):
     if fields is not None:
         filtered_data = {field: data.get(field) for field in fields}
@@ -21,16 +21,32 @@ def create_fingerprint_model(model_cls, data, fields=None):
     instance.save()
     return instance
 
-
-# Parse JSON into a Fingerprint dataclass instance.
+# Parse JSON into a Fingerprint dataclass instance
 def create_fingerprint_instance(request):
     if request.method == "POST":
         data = json.loads(request.body)
         fingerprint = from_dict(fingerprint_dataclass, data)
         return fingerprint
 
+# Recursively flattens a nested dictionary into a single dict
+def flatten_dict(d, parent_key='', sep='.'):
+    items = []
+    for k, v in d.items():
+        new_key = parent_key + sep + k if parent_key else k
+        if isinstance(v, dict):
+            items.extend(flatten_dict(v, new_key, sep=sep).items())
+        elif isinstance(v, list):
+            items.append((new_key + '.length', len(v)))
+            for i, elem in enumerate(v):
+                if isinstance(elem, dict):
+                    items.extend(flatten_dict(elem, f"{new_key}.{i}", sep=sep).items())
+                else:
+                    items.append((f"{new_key}.{i}", elem))
+        else:
+            items.append((new_key, v))
+    return dict(items)
 
-# Retrieve full Fingerprint instance and serialize related models to dictionaries.
+# Retrieve full Fingerprint instance and serialize related models to dictionaries
 def fetch_full_fingerprint(fingerprint_id):
     try:
         fingerprint = fingerprint_model.objects.select_related(
@@ -47,7 +63,6 @@ def fetch_full_fingerprint(fingerprint_id):
             'time_zone',
             'media',
             'touch_pointer',
-            'performance_timings',
             'ip',
             'canvas',
             'plugins',
@@ -61,7 +76,7 @@ def fetch_full_fingerprint(fingerprint_id):
         related_fields = [
             'http_header', 'behavioral', 'display', 'storage', 'css_media_feature',
             'permissions_status', 'graphics', 'hardware', 'browser', 'network_connection',
-            'time_zone', 'media', 'touch_pointer', 'performance_timings', 'ip',
+            'time_zone', 'media', 'touch_pointer', 'ip',
             'canvas', 'plugins', 'encrypted_media_capabilities', 'audio', 'fonts'
         ]
 
@@ -75,8 +90,7 @@ def fetch_full_fingerprint(fingerprint_id):
     except ObjectDoesNotExist:
         return None
 
-
-# Build and save all related Fingerprint component models.
+# Build and save all related Fingerprint component models
 def build_fingerprint_components(data):
     return {
         "ip": create_fingerprint_model(models.IP, data.get("ip", {}), ["ip_address", "details"]),
@@ -97,7 +111,7 @@ def build_fingerprint_components(data):
         ]),
         "display": create_fingerprint_model(models.Display, data.get("display", {}), [
             "screen_height", "screen_width", "color_depth",
-            "device_pixel_ratio", "color_gamut"
+            "device_pixel_ratio", "color_gamut", "framerate"
         ]),
         "fonts": create_fingerprint_model(models.Fonts, data.get("fonts", {}), ["installed_fonts"]),
         "graphics": create_fingerprint_model(models.Graphics, data.get("graphics", {}), [
@@ -115,9 +129,6 @@ def build_fingerprint_components(data):
         ]),
         "network": create_fingerprint_model(models.NetworkConnection, data.get("network", {}), [
             "effective_type", "downlink", "rtt"
-        ]),
-        "performance": create_fingerprint_model(models.PerformanceTimings, data.get("performance", {}), [
-            "timings", "memory", "network_timing", "framerate"
         ]),
         "permissions": create_fingerprint_model(models.PermissionsStatus, data.get("permissions", {}), [
             "geolocation", "notifications", "camera", "microphone", "midi"
@@ -140,8 +151,7 @@ def build_fingerprint_components(data):
         ])
     }
 
-
-# Create the main Fingerprint model.
+# Create the main Fingerprint model
 def create_fingerprint(data):
     components = build_fingerprint_components(data)
 
@@ -159,7 +169,6 @@ def create_fingerprint(data):
         time_zone=components["time_zone"],
         media=components["media"],
         touch_pointer=components["touch_pointer"],
-        performance_timings=components["performance"],
         ip=components["ip"],
         canvas=components["canvas"],
         plugins=components["plugins"],

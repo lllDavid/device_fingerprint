@@ -24,6 +24,7 @@ class Display(models.Model):
     color_depth = models.IntegerField(null=True, blank=True)
     device_pixel_ratio = models.FloatField(null=True, blank=True)
     color_gamut = models.CharField(max_length=20, null=True, blank=True)
+    framerate = models.FloatField(null=True, blank=True)
 
 class Storage(models.Model):
     cookies_enabled = models.BooleanField(null=True, blank=True)
@@ -84,12 +85,6 @@ class TouchPointer(models.Model):
     pointer_fine = models.BooleanField(null=True, blank=True)
     standalone = models.BooleanField(null=True, blank=True)
 
-class PerformanceTimings(models.Model):
-    timings = JSONField(default=dict, null=True, blank=True)
-    memory = JSONField(default=dict, null=True, blank=True)
-    network_timing = JSONField(default=dict, null=True, blank=True)
-    framerate = models.FloatField(null=True, blank=True)
-
 class IP(models.Model):
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     details = JSONField(default=dict, blank=True, null=True)
@@ -127,7 +122,6 @@ class Fingerprint(models.Model):
     time_zone = models.OneToOneField(TimeZone, null=True, blank=True, on_delete=models.CASCADE)
     media = models.OneToOneField(Media, null=True, blank=True, on_delete=models.CASCADE)
     touch_pointer = models.OneToOneField(TouchPointer, null=True, blank=True, on_delete=models.CASCADE)
-    performance_timings = models.OneToOneField(PerformanceTimings, null=True, blank=True, on_delete=models.CASCADE)
     ip = models.OneToOneField(IP, null=True, blank=True, on_delete=models.CASCADE)
     canvas = models.OneToOneField(Canvas, null=True, blank=True, on_delete=models.CASCADE)
     plugins = models.OneToOneField(Plugins, null=True, blank=True, on_delete=models.CASCADE)
